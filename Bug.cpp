@@ -9,59 +9,24 @@ Bug::Bug(D2DFramework* pFramework) :
 	mX = static_cast<float>(rand() % (rct.right - rct.left));
 	mY = static_cast<float>(rand() % (rct.bottom - rct.top));
 
-	mDirection = Direction::UP;
+	mRotation = 0.0;
 	mSteps = 0.0f;
 }
 
 void Bug::Draw()
 {
-	if (mSteps++ > 10)
+	auto pRT = mpFramework->GetRenderTarget();
+	if (!pRT)
 	{
-		mSteps = 0;
-		int dir = static_cast<int>(mDirection);
-		int count = static_cast<int>(Direction::COUNT);
-
-		dir += (rand()%3 -1);
-		dir = (dir + count) % count;
-
-		mDirection = static_cast<Direction>(dir);
+		return;
 	}
+	auto size = mpBitmap->GetPixelSize();
+	auto matTranslate = D2D1::Matrix3x2F::Translation(mX, mY);
+	auto matRotation = D2D1::Matrix3x2F::Rotation(90.0f, 
+		D2D_POINT_2F{size.width * 0.5f, size.height * 0.5f});
+	pRT->SetTransform(matRotation * matTranslate); // 회전 먼저 하고 이동 - 행렬은 순서가 중요
 
-	switch (mDirection)
-	{
-	case Bug::Direction::UP:
-		mY--;
-		break;
-	case Bug::Direction::UP_RIGHT:
-		mY--;
-		mX++;
-		break;
-	case Bug::Direction::RIGHT:
-		mX++;
-		break;
-	case Bug::Direction::DOWN_RIGHT:
-		mY++;
-		mX++;
-		break;
-	case Bug::Direction::DOWN:
-		mY++;
-		break;
-	case Bug::Direction::DOWN_LEFT:
-		mY++;
-		mX--;
-		break;
-	case Bug::Direction::LEFT:
-		mX--;
-		break;
-	case Bug::Direction::UP_LEFT:
-		mY--;
-		mX--;
-		break;
-	case Bug::Direction::COUNT:
-		break;
-	default:
-		break;
-	}
-
-	Actor::Draw();
+	
+	D2D1_RECT_F rect{ 0,0, static_cast<float>(size.width), static_cast<float>(size.height) };
+	mpFramework->GetRenderTarget()->DrawBitmap(mpBitmap, rect, mOpacity);
 }

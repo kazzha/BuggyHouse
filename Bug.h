@@ -2,20 +2,8 @@
 #include "Actor.h"
 class Bug : public Actor
 {
-	enum class Direction
-	{
-		UP,
-		UP_RIGHT,
-		RIGHT,
-		DOWN_RIGHT,
-		DOWN,
-		DOWN_LEFT,
-		LEFT,
-		UP_LEFT,
-		COUNT
-	};
-
-	Direction mDirection;
+	const D2D_POINT_2F UPVECTOR{ 0.0f, -1.0f }; // 길이가 1인 벡터 = 단위벡터 (회전에만 쓸 것이기 때문)
+	float mRotation;
 	float mSteps;
 
 public:

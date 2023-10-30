@@ -25,7 +25,7 @@ void BuggyHouse::Render()
 {
     mspRenderTarget->BeginDraw();
     mspRenderTarget->Clear(D2D1::ColorF(0.0f, 0.2f, 0.4f, 1.0f));
-
+    mspRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
     mspBackground->Draw();
     for (auto& bug : mBugList)
     {
