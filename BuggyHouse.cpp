@@ -53,3 +53,29 @@ void BuggyHouse::Release()
 
     D2DFramework::Release();
 }
+
+void BuggyHouse::CheckBugs()
+{
+    if (GetAsyncKeyState(VK_LBUTTON) & 0x8000) // 최상위비트가 켜져있는지 보는 것
+    {
+        POINT pt;
+        GetCursorPos(&pt);
+        ScreenToClient(mHwnd, &pt);
+
+        auto itr = std::remove_if(mBugList.begin(), mBugList.end(),
+            [&](auto& actor) {
+                Bug* p = static_cast<Bug*>(bug.get());
+                p->IsClicked(pt);
+                if (p->mIsDead)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        );
+        mBugList.erase(itr, mBugList.end());
+    }
+}

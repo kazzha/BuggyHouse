@@ -7,8 +7,13 @@ class Bug : public Actor
 	float mSteps;
 
 public:
+	bool mIsDead;
+
+public:
 	Bug(D2DFramework* pFramework);
 
 	virtual void Draw() override;
+
+	bool IsClicked(POINT& pt);
 };
 

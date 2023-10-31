@@ -15,18 +15,31 @@ Bug::Bug(D2DFramework* pFramework) :
 
 void Bug::Draw()
 {
+	
 	auto pRT = mpFramework->GetRenderTarget();
 	if (!pRT)
 	{
 		return;
 	}
+
 	auto size = mpBitmap->GetPixelSize();
+
+	if (mSteps++ > 30)
+	{
+		mSteps = 0;
+		mRotation += (1 - rand() % 3) * 45.0f;
+	}
+
+	auto forward = UPVECTOR * D2D1::Matrix3x2F::Rotation(mRotation);
+	mX += forward.x;
+	mY += forward.y;
+
 	auto matTranslate = D2D1::Matrix3x2F::Translation(mX, mY);
-	auto matRotation = D2D1::Matrix3x2F::Rotation(90.0f, 
+	auto matRotation = D2D1::Matrix3x2F::Rotation(mRotation, 
 		D2D_POINT_2F{size.width * 0.5f, size.height * 0.5f});
 	pRT->SetTransform(matRotation * matTranslate); // 회전 먼저 하고 이동 - 행렬은 순서가 중요
 
 	
 	D2D1_RECT_F rect{ 0,0, static_cast<float>(size.width), static_cast<float>(size.height) };
-	mpFramework->GetRenderTarget()->DrawBitmap(mpBitmap, rect, mOpacity);
+	pRT->DrawBitmap(mpBitmap, rect, mOpacity);
 }
