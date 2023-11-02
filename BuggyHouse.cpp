@@ -77,5 +77,6 @@ void BuggyHouse::CheckBugs()
             }
         );
         mBugList.erase(itr, mBugList.end());
+        
     }
 }

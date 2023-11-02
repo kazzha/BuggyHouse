@@ -11,6 +11,7 @@ Bug::Bug(D2DFramework* pFramework) :
 
 	mRotation = 0.0;
 	mSteps = 0.0f;
+	mIsDead = false;
 }
 
 void Bug::Draw()
@@ -42,4 +43,18 @@ void Bug::Draw()
 	
 	D2D1_RECT_F rect{ 0,0, static_cast<float>(size.width), static_cast<float>(size.height) };
 	pRT->DrawBitmap(mpBitmap, rect, mOpacity);
+}
+
+bool Bug::IsClicked(POINT& pt)
+{
+	auto size = mpBitmap->GetPixelSize();
+
+	if (pt.x >= mX && pt.y >= mY &&
+		pt.x < +mX + size.width && pt.y <= mY + size.height)
+	{
+		mIsDead = true;
+		return true;
+	}
+
+	return false;
 }
